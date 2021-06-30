@@ -3,30 +3,68 @@ const path = require("path");
 
 const contactsPath = path.join(__dirname, "db/contacts.json");
 
-const listContacts = async () => {
+async function listContacts() {
   try {
     const data = await fs.readFile(contactsPath);
     const contacts = JSON.parse(data);
-    // return contacts
-    console.log(contacts);
+    return contacts;
   } catch (error) {
     error.message = "Can't read products file";
     throw error;
   }
-};
+}
 
-// function getContactById(contactId) {
-//   // ...твой код
-// }
+async function getContactById(contactId) {
+  try {
+    const contacts = await listContacts();
+    const findContact = contacts.find((contact) => contact.id === contactId);
 
-// function removeContact(contactId) {
-//   // ...твой код
-// }
+    if (!findContact) {
+      throw new Error("Id incorrect");
+    }
+    return findContact;
+  } catch (error) {}
+}
 
-// function addContact(name, email, phone) {
-//   // ...твой код
-// }
+async function removeContact(contactId) {
+  try {
+    const contacts = await listContacts();
+    const findContact = contacts.find((contact) => contact.id === contactId);
+    if (!findContact) {
+      throw new Error("Id incorrect");
+    }
+    const updateContacts = contacts.filter(
+      (contact) => contact.id !== contactId
+    );
+    const str = JSON.stringify(updateContacts);
+    await fs.writeFile(contactsPath, str);
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function addContact(name, email, phone) {
+  try {
+    const contacts = await listContacts();
+    const id = contacts[contacts.length - 1].id + 1;
+    const newUser = {
+      id,
+      name,
+      email,
+      phone,
+    };
+    const newUsers = [...contacts, newUser];
+    const str = JSON.stringify(newUsers);
+    await fs.writeFile(contactsPath, str);
+    return newUser;
+  } catch (error) {
+    throw error;
+  }
+}
 
 module.exports = {
   listContacts,
+  getContactById,
+  removeContact,
+  addContact,
 };
