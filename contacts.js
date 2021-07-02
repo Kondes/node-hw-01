@@ -17,20 +17,20 @@ async function listContacts() {
 async function getContactById(contactId) {
   try {
     const contacts = await listContacts();
-    const findContact = contacts.find((contact) => contact.id === contactId);
+    const findedContact = contacts.find((contact) => contact.id === contactId);
 
-    if (!findContact) {
+    if (!findedContact) {
       throw new Error("Id incorrect");
     }
-    return findContact;
+    return findedContact;
   } catch (error) {}
 }
 
 async function removeContact(contactId) {
   try {
     const contacts = await listContacts();
-    const findContact = contacts.find((contact) => contact.id === contactId);
-    if (!findContact) {
+    const findedContact = contacts.find((contact) => contact.id === contactId);
+    if (!findedContact) {
       throw new Error("Id incorrect");
     }
     const updateContacts = contacts.filter(
